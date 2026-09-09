@@ -1,0 +1,66 @@
+    const startWithFallback = () => {
+      const p = fallbackPuzzles[Math.floor(Math.random() * fallbackPuzzles.length)];
+      const initialGame = new Chess(p.FEN);
+      setPuzzle(p);
+      setGame(initialGame);
+      setStatus('READY');
+    };
+
+    if (!supabase) {
+      startWithFallback();
+      return;
+    }
+
+    try {
+      // Query for endgame puzzles
+      // Fetch random block of puzzles to avoid repetition
+      const randomOffset = Math.floor(Math.random() * 5000);
+      const { data, error } = await supabase
+        .from('puzzles')
+        .select('*')
+        .ilike('Themes', '%endgame%')
+        .range(randomOffset, randomOffset + 50);
+
+      if (error) throw error;
+      if (data && data.length > 0) {
+        // Find endgame puzzles or fallback to any
+        let suitable = data.filter(p => (p.Themes || '').toLowerCase().includes('endgame'));
+        if (suitable.length === 0) suitable = data;
+        
+        const randomPuzzle = suitable[Math.floor(Math.random() * suitable.length)];
+        
+        // Deep mapping
+        const findField = (row: any, targets: string[]) => {
+          const keys = Object.keys(row);
+          for (const t of targets) {
+--
+        startWithFallback();
+      }
+    } catch (err) {
+      console.error("CRUCIBLE_FETCH_ERROR:", err);
+      startWithFallback();
+    }
+  }, [initialTimeMs]);
+
+  useEffect(() => {
+    fetchEndgame();
+  }, [fetchEndgame, initialTimeMs]);
+
+  // --- GAMEPLAY LOGIC ---
+  const startScramble = () => {
+    setStatus('SCRAMBLE');
+    stateRef.current.status = 'SCRAMBLE';
+    (window as any)._lastBeat = 0;
+    (window as any)._tinnitusPlayed = false;
+    lastTickRef.current = performance.now();
+    timerRef.current = requestAnimationFrame(tick);
+    soundEngine.play('complete');
+  };
+
+  const tick = (now: number) => {
+    if (stateRef.current.status !== 'SCRAMBLE') return;
+
+    const delta = now - lastTickRef.current;
+    lastTickRef.current = now;
+    
+    // Only tick player's clock when it is their turn

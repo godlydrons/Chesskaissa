@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head></head>
+<body>
+<script>
+  const worker = new Worker('stockfish.js');
+  worker.onmessage = function(e) {
+    console.log(e.data);
+  };
+  worker.postMessage('uci');
+</script>
+</body>
+</html>

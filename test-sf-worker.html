@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script>
+  console.log("Loading worker...");
+  const worker = new Worker('stockfish.js');
+  worker.onmessage = function(e) {
+    console.log("WORKER MSG:", e.data);
+    if(e.data === 'uciok') {
+       console.log("SUCCESS");
+    }
+  };
+  worker.postMessage('uci');
+</script>
+</body>
+</html>

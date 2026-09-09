@@ -1,0 +1,6 @@
+{
+  "name": "Grandmaster Trainer",
+  "description": "High-frequency neural overclocking for chess. Features Play Like A Champion (Kasparov style forks & radar fingerprints), The Forge, The Crucible, and CAISSA-CORE runtime with hardware-accelerated Manhattan cartography.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
